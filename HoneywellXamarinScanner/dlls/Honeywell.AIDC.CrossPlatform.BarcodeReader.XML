@@ -1,0 +1,2555 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Honeywell.AIDC.CrossPlatform.BarcodeReader</name>
+    </assembly>
+    <members>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeDeviceEventHandler.#ctor(Honeywell.AIDC.CrossPlatform.BarcodeReader)">
+            <summary>
+            Create a BarcodeDeviceEventHandler object with the specified handler.
+            </summary>
+            <param name="source">The AidcManager object that originates the event.</param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeDeviceEventHandler.OnBarcodeDeviceConnectionEvent(Com.Honeywell.Aidc.BarcodeDeviceConnectionEvent)">
+            <summary>
+            Implements the IBarcodeListener interface. Invoked when a device is connected
+            </summary>
+            <param name="e">Device information and connection status.</param>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReader">
+            <summary>
+            The BarcodeReader class represents a barcode reader device. It provides
+            the following features:
+            <list type="bullet">
+            <item>
+            <description>Gets a listed of connected barcode readers.</description>
+            </item>
+            <item>
+            <description>Opens or closes a connection to an internal barcode reader or a
+            supported external barcode reader such as the ring scanner for Dolphin 75e.</description>
+            </item>
+            <item>
+            <description>Receives scanned barcode data via events.</description>
+            </item>
+            <item>
+            <description>Programmatically triggers the scanner.</description>
+            </item>
+            <item>
+            <description>Configures the symbology and decoder settings.</description>
+            </item>
+            </list>
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.#ctor(System.Object)">
+            <summary>
+            Creates a BarcodeReader object for accessing the internal scanner.
+            </summary>
+            <param name="context">This is an optional parameter default to null.
+            On Android platform, it will use Android.App.Application.Context if
+            the parameter value is null. If the parameter is not null, then it
+            needs to be a type of Android.Content.Context. It can
+            be either an activity or application context.</param>
+            <exception cref="T:System.ArgumentException">Invalid context parameter.
+            </exception>
+            <example>
+            <code>
+            using Honeywell.AIDC.CrossPlatform;
+            BarcodeReader mBarcodeReader = new BarcodeReader();
+            </code>
+            </example>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a BarcodeReader object for accessing the specified scanner.
+            For the scannerName parameter, use one of the scanner names returned
+            from the <see cref="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.GetConnectedBarcodeReaders(System.Object)"/> method
+            or null for the internal scanner.
+            </summary>
+            <param name="scannerName">A string to identify the scanner that this
+            object represents and operates on.</param>
+            <param name="context">This is an optional parameter default to null.
+            On Android platform, it will use Android.App.Application.Context if
+            the parameter value is null. If the parameter is not null, then it
+            needs to be a type of Android.Content.Context. It can
+            be either an activity or application context.</param>
+            <exception cref="T:System.ArgumentException">Invalid context parameter.
+            </exception>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.SetBarcodeDeviceListener(System.Object)">
+            <summary>
+            Sets the AddBarcodeDeviceListener for device connection status.
+            </summary>
+            <param name="context">This parameter needs to be a type of Android.Content.Context.
+            It can be an activity or application context.</param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.OpenAsync">
+            <summary>
+            Opens the barcode reader specified in the constructor.
+            </summary>
+            <example>
+            <code>
+            using Honeywell.AIDC.CrossPlatform;
+            BarcodeReader mBarcodeReader = new BarcodeReader();
+            BarcodeReader.Result result = await mBarcodeReader.OpenAsync();
+            if (result.Code == BarcodeReader.Result.Codes.SUCCESS)
+            {
+                // Barcode reader was successfully opened. You may invoke other methods
+                // of the BarcodeReader object to interact with the reader.
+            }
+            </code>
+            </example>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.CloseAsync">
+            <summary>
+            Closes the barcode reader.
+            </summary>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.SetAsync(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Sets a collection of decoder or symbology settings. The settings parameter
+            contains a collection of key-value pairs where the key identifies the setting.
+            <para>You may use <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingKeys"/> to get the
+            predefined setting keys. The setting value type may be any built-in C# types
+            such as bool, int, string, etc. You may use <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/>
+            to get the predefined values for certain settings. Please reference the API
+            documentation of the <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys"/> class for the
+            expected setting value types.</para>
+            <para>Note: This method may not return error result if the setting is not
+            supported by the decoder or the setting value is not accepted by the decoder.</para>
+            </summary>
+            <param name="settings">A Dictionary object containing setting key-value pairs.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+            <example>
+            <code>
+            using Honeywell.AIDC.CrossPlatform;
+            BarcodeReader mBarcodeReader = new BarcodeReader();
+            BarcodeReader.Result result = await mBarcodeReader.OpenAsync();
+            if (result.Code == BarcodeReader.Result.Codes.SUCCESS ||
+                result.Code == BarcodeReader.Result.Codes.READER_ALREADY_OPENED)
+            {
+                Dictionary&lt;string, object&gt; settings = new Dictionary&lt;string, object&gt;();
+                settings.Add(mBarcodeReader.SettingKeys.Code39Enabled, true);
+                settings.Add(mBarcodeReader.SettingKeys.Code39CheckDigitMode,
+                mBarcodeReader.SettingValues.Code39CheckDigitMode_NoCheck);
+                result = await mBarcodeReader.SetAsync(settings);
+            }
+            </code>
+            </example>
+            <seealso cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys"/>
+            <seealso cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues"/>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.SoftwareTriggerAsync(System.Boolean)">
+            <summary>
+            Starts or stops the software trigger. When the on parameter is true, it
+            activates the aimer to start decoding barcodes.
+            Note: Some readers may not support the software trigger.
+            </summary>
+            <param name="on">A Boolean value to indicate whether to start or
+            stop the software trigger.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.EnableAsync(System.Boolean)">
+            <summary>
+            Enables or disables the barcode reader.
+            </summary>
+            <param name="enabled">A Boolean value to indicate whether to enable or
+            disable the barcode reader.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.GetConnectedBarcodeReaders(System.Object)">
+            <summary>
+            Gets a list of barcode readers that are currently connected.
+            </summary>
+            <param name="context">This is an optional parameter default to null.
+            On Android platform, it will use Android.App.Application.Context if
+            the parameter value is null. If the parameter is not null, then it
+            needs to be a type of Android.Content.Context. It can
+            be either an activity or application context.</param>
+            <returns>A list of <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderInfo"/> objects representing
+            barcode readers that are currently connected.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.DisposeReader">
+            <summary>
+            Releases the barcode reader resources.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReader.IsReaderOpened">
+            <summary>
+            Gets a boolean value indicating whether the barcode reader is opened.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderManager">
+            <summary>
+            Initiates the connection to the Data Collection Service via the Java
+            AidcManager class. The service connection only needs to be done once.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderManager.sAidcManager">
+            <summary>
+            An application only needs one instance of AidcManager; therefore,
+            it is declared as static. It can be used to create multiple
+            instances of the Java BarcodeReader objects.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderManager.Create(Android.Content.Context)">
+            <summary>
+            Returns an instance of the BarcodeReaderManager object.
+            Note: The context parameter is only used the first time this method
+            is called to create the BarcodeReaderManager object. The subsequent
+            calls will simply return the existing BarcodeReaderManager object.
+            It will get the application context from the context parameter.
+            Even if this method is called from different Activity classes,
+            their application context is the same.
+            </summary>
+            <param name="context">An activity or application context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderManager.Init">
+            <summary>
+            This method initiates the connection to the Data Collection Service
+            by creating an AidcManager object. The AidcManager object is returned
+            so it can be used to create the Java BarcodeReader objects.
+            </summary>
+            <returns>A Java AidcManager object.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderManager.Com#Honeywell#Aidc#AidcManager#ICreatedCallback#OnCreated(Com.Honeywell.Aidc.AidcManager)">
+            <summary>
+            This callback method is called from the main UI thread when
+            the Data Collection Service (an AIDL service) is connected.
+            </summary>
+            <param name="aidcManager">The created AidcManager object</param>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.ObjectTypeHelper">
+            <summary>
+            An internal helper class to convert object types between C# and Java.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.ObjectTypeHelper.ConvertSettingValueToJavaObject(System.Object)">
+            <summary>
+            Converts a C# object to a Java object.
+            </summary>
+            <param name="value">A C# object.</param>
+            <returns>A Java object.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeEventHandler.#ctor(Honeywell.AIDC.CrossPlatform.BarcodeReader)">
+            <summary>
+            Create a BarcodeReaderEventHandler object with the specified handler.
+            </summary>
+            <param name="source">The BarcodeReader object that originates the event.</param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeEventHandler.OnBarcodeEvent(Com.Honeywell.Aidc.BarcodeReadEvent)">
+            <summary>
+            Implements the IBarcodeListener interface. Invoked when a barcode
+            is read.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeEventHandler.OnFailureEvent(Com.Honeywell.Aidc.BarcodeFailureEvent)">
+            <summary>
+            Implements the IBarcodeListener interface.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase">
+            <summary>
+            This abstract class defines common barcode reader interfaces and
+            data types.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result">
+            <summary>
+            Contains the method execution result.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.BARCODE_READER_FACILITY">
+            <summary>
+            Common facility code for BarcodeReader.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes">
+            <summary>
+            Defines the common status codes returned in the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.SUCCESS">
+            <summary>
+            Successful status.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.EXCEPTION">
+            <summary>
+            Unexpected exception
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.INVALID_PARAMETER">
+            <summary>
+            Invalid parameter.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.INTERNAL_ERROR">
+            <summary>
+            Internal error.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.READER_ALREADY_OPENED">
+            <summary>
+            The barcode reader was already opened.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.FEATURE_NOT_SUPPORTED">
+            <summary>
+            The feature is not supported.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Codes.NO_ACTIVE_CONNECTION">
+            <summary>
+            No active scanner connection.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.#ctor(System.Int32,System.String)">
+            <summary>
+            Constructs a Result object with the specified status code and
+            message.
+            </summary>
+            <param name="code">An integer status code.</param>
+            <param name="message">A string containing a human-readable
+            message for the operation status.</param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.#ctor(System.Int32,System.Int32,System.String)">
+            <summary>
+            Constructs a Result object with the specified facility code,
+            error code and message.
+            </summary>
+            <param name="facility">An integer value (0 - 0xFFFF) that
+            identifies a specific facility originating the error.</param>
+            <param name="error">An integer error code (0 - 0xFFFF).</param>
+            <param name="message">A string containing a human-readable
+            message for the operation status.</param>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Code">
+            <summary>
+            An integer status code. 0 (zero) indicates a successful status
+            and all other values indicate failure.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result.Message">
+            <summary>
+            A string containing a human-readable message for the operation status.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.mScannerName">
+            <summary>
+            A string containing the name of the barcode reader.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.mContext">
+            <summary>
+            An object specifying the platform specific context.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.mSettingKeys">
+            <summary>
+            An instance of <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys"/> which a subclass may override.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.mSettingValues">
+            <summary>
+            An instance of <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues"/> which a subclass may override.
+            </summary>
+        </member>
+        <member name="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady">
+            <summary>
+            Occurs when a barcode is successfully read.
+            </summary>
+        </member>
+        <member name="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.ConnectionStateChanged">
+            <summary>
+            Occurs when the reader's connection state changes.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.#ctor(System.Object)">
+            <summary>
+            Create a BarcodeReader object for accessing the internal scanner.
+            </summary>
+            <param name="context">This parameter is only required on the Android
+            be platform. It needs to be a type of Android.Content.Context. It can
+            an activity or application context.</param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.#ctor(System.String,System.Object)">
+            <summary>
+            Create a BarcodeReader object for accessing the specified scanner.
+            </summary>
+            <param name="scannerName">A string to identify the scanner that this
+            object represents and operates on.</param>
+            <param name="context">This parameter is only required on the Android
+            platform. It needs to be a type of Android.Content.Context. It can
+            be an activity or application context.</param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.OpenAsync">
+            <summary>
+            Opens the barcode reader specified in the constructor.
+            </summary>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.CloseAsync">
+            <summary>
+            Closes the barcode reader.
+            </summary>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SetAsync(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Sets a collection of decoder or symbology settings.
+            </summary>
+            <param name="settings">A Dictionary object containing setting key-value pairs.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SoftwareTriggerAsync(System.Boolean)">
+            <summary>
+            Starts or stops the software trigger. When the on parameter is true, it
+            activates the aimer to start decoding barcodes.
+            Note: Some readers may not support the software trigger.
+            </summary>
+            <param name="on">A Boolean value to indicate whether to start or
+            stop the software trigger.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.EnableAsync(System.Boolean)">
+            <summary>
+            Enables or disables the barcode reader.
+            </summary>
+            <param name="enabled">A Boolean value to indicate whether to enable or
+            disable the barcode reader.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.IsReaderOpened">
+            <summary>
+            Gets a boolean value indicating whether the barcode reader is opened.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingKeys">
+            <summary>
+            Gets the associated <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys"/> object that
+            can be used to get the setting key for a specific setting.
+            </summary>
+            <seealso cref="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SetAsync(System.Collections.Generic.Dictionary{System.String,System.Object})"/>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues">
+            <summary>
+            Gets the associated <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues"/> object that
+            can be used to get predefined setting values for certain settings.
+            </summary>
+            <seealso cref="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SetAsync(System.Collections.Generic.Dictionary{System.String,System.Object})"/>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.DisposeReader">
+            <summary>
+            Releases the barcode reader resources.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.HasBarcodeDataReadySubscriber">
+            <summary>
+            Returns a boolean value to indicate whether there is a subscriber
+            for the <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.OnBarcodeDataRead(Honeywell.AIDC.CrossPlatform.BarcodeDataArgs)">
+            <summary>
+            Fires the <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.HasBarcodeDeviceSubscriber">
+            <summary>
+            Returns a boolean value to indicate whether there is a subscriber
+            for the <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.ConnectionStateChanged"/> event.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.OnConnectedStateChanged(Honeywell.AIDC.CrossPlatform.ConnectionStateArgs)">
+            <summary>
+            Fires the <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.ConnectionStateChanged"/> event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Dispose(System.Boolean)">
+            <summary>
+            Releases resources.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Finalize">
+            <summary>
+            BarcodeReaderBase class destructor.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Dispose">
+            <summary>
+            Implements the IDisposable interface to release scanning resources.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs">
+            <summary>
+            Provides data for the <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs.#ctor(System.String,System.UInt32,System.String,System.DateTime)">
+            <summary>
+            Creates a BarcodeDataArgs object containing the specified info.
+            </summary>
+            <param name="data">The scanned barcode data.</param>
+            <param name="symbType">The symbology type of the scanned barcode.</param>
+            <param name="symbName">The string representation of symbType.</param>
+            <param name="time">The time when the barcode was scanned.</param>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs.Data">
+            <summary>
+            The scanned barcode data.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs.SymbologyType">
+            <summary>
+            The symbology type of the scanned barcode. The symbology types are
+            defined in the <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies"/> class.
+            </summary>
+            <seealso cref="T:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies"/>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs.SymbologyName">
+            <summary>
+            The string representation of <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs.SymbologyType"/>.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeDataArgs.TimeStamp">
+            <summary>
+            The time when the barcode was scanned.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderInfo">
+            <summary>
+            This class provides information of a barcode reader device.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderInfo.ScannerName">
+            <summary>
+            The name uniquely identifies the scanner. This name can be used in
+            the <see cref="M:Honeywell.AIDC.CrossPlatform.BarcodeReader.#ctor(System.String,System.Object)"/>
+            constructor.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderInfo.ScannerID">
+            <summary>
+            The scan engine ID.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderInfo.ScanneFriendlyName">
+            <summary>
+            The friendly name of the scanner.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs">
+            <summary>
+            Provides status for the <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.ConnectionStateChanged"/> event.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs.BarcodeReaderInfo">
+            <summary>
+            An object that contains the reader information when the reader's connection state changed.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs.ConnectionStates">
+            <summary>
+            Define the constant values for the connection states.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs.ConnectionStates.CONNECTED">
+            <summary>
+            Reader is connected.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs.ConnectionStates.DISCONNECTED">
+            <summary>
+            Reader is disconnected.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs.#ctor(System.String,System.String,System.String,System.Int32)">
+            <summary>
+            <param name="Id">Device Id.</param>
+            <param name="name">Device name.</param>
+            <param name="friendlyName">Device frendly name.</param>
+            <param name="connectionState">The current connection state.</param>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.ConnectionStateArgs.State">
+            <summary>
+            Gets the current connection state.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys">
+            <summary>
+            This class provides properties for identifying barcode related settings.
+            Application should create an instance of <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> object
+            and use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingKeys"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference the setting key properties
+            defined in this class.
+            </summary>
+            <seealso cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues"/>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.AztecEnabled">
+            <summary>
+            Setting key to enable or disable the Aztec symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.AztecMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Aztec barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.AztecMininumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Aztec barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CenterDecodeEnabled">
+            <summary>
+            Setting key to enable scanning only near the aimer center. When set to
+            false, the scanner decodes any bar code in view. When set to true, the scanner
+            only decodes bar codes that are detected near scan window. By default, the
+            scan window is a small region near the aimer center. It can be customized
+            through the DecodeWindow properties.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.ChinaPostEnabled">
+            <summary>
+            Setting key to enable or disable the China Post symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.ChinaPostMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding China Post barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.ChinaPostMinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding China Post barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarCheckDigitMode">
+            <summary>
+            Setting key to set the check digit mode for Codabar barcodes.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.CodabarCheckDigitMode_Check"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.CodabarCheckDigitMode_CheckAndStrip"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.CodabarCheckDigitMode_NoCheck"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarConcatEnabled">
+            <summary>
+            Setting key to enable or disable Codabar concatenation.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarEnabled">
+            <summary>
+            Setting key to enable or disable the Codabar symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Codabar barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarMinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Codabar barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarStartStopTransmitEnabled">
+            <summary>
+            Setting key to enable or disable the start/stop transmission for Codabar.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodablockAEnabled">
+            <summary>
+            Setting key to enable or disable the Codablock-A symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodablockAMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Codablock-A barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodablockAMinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Codablock-A barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodablockFEnabled">
+            <summary>
+            Setting key to enable or disable the Codablock-F symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodablockFMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Codablock-F barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodablockFMinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Codablock-F barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11CheckDigitMode">
+            <summary>
+            Setting key to set the check digit mode for Code 11 barcodes.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_DoubleDigitCheck"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_DoubleDigitCheckAndStrip"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_SingleDigitCheck"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_SingleDigitCheckAndStrip"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11Enabled">
+            <summary>
+            Setting key to enable or disable the Code 11 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11MaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Code 11 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11MinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Code 11 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128Enabled">
+            <summary>
+            Setting key to enable or disable the Code 128 symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128MaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Code 128 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128MinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Code 128 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128ShortMargin">
+            <summary>
+            Setting key to specify whether substandard length margins (i.e. quiet zones)
+            should be allowed for Code 128 symbols during the execution of decode.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code128ShortMargin_Disabled"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code128ShortMargin_EnableBothEnds"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code128ShortMargin_Enabled"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39Base32Enabled">
+            <summary>
+            Setting key to enable or disable Base 32 conversion for Code 39.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39CheckDigitMode">
+            <summary>
+            Setting key to set the check digit mode for Code 39 barcodes.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code39CheckDigitMode_Check"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code39CheckDigitMode_CheckAndStrip"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code39CheckDigitMode_NoCheck"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39Enabled">
+            <summary>
+            Setting key to enable or disable the Code 39 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39FullAsciiEnabled">
+            <summary>
+            Setting key to enable or disable full ASCII Code 39.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39MaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Code 39 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39MinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Code 39 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39StartStopTransmitEnabled">
+            <summary>
+            Setting key to enable or disable the start/stop transmission for Code 39.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code93Enabled">
+            <summary>
+            Setting key to enable or disable the Code 93 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code93MaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Code 93 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code93MinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Code 93 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code93HighDensity">
+            <summary>
+            Setting key to enable or disable high density decoding improvements for Code 93.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CombineComposites">
+             <summary>
+             Setting key to enable or disable the combination of parts of
+             composite codes symbology before returning data.
+             <para>The value for this setting should be boolean.</para>
+             </summary>
+            
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CompositeEnabled">
+            <summary>
+            Setting key to enable or disable the GS1 Composite symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CompositeMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding GS1 Composite barcodes.
+            Codes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CompositeMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding GS1 Composite barcodes.
+            Codes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CompositeWithUpcEnabled">
+            <summary>
+            Setting key to enable or disable UPC code to be read with
+            PDF417 or MicroPDF417 composite.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DatamatrixEnabled">
+            <summary>
+            Setting key to enable or disable the Datamatrix symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DatamatrixMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Datamatrix barcodes.
+            Codes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DatamatrixMinimumLength">
+            <summary>
+            Setting key to set Minimum code length for decoding Datamatrix barcodes.
+            Codes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorCharset">
+            <summary>
+            Setting key to specify the charset used to interpret the barcode byte data.
+            <para>The value for this setting should be a string containing a charset
+            name supported by Android.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorEditDataPlugin">
+            <summary>
+            Setting key to specify the plug-in to modify the barcode data before
+            it is delivered in <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event.
+            Normally the application can manipulate the barcode data in the
+            <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event handler. You may
+            use this setting if your application provides generic scanning feature
+            and allows a customer to provide a data editing plug-in to edit the
+            data according to their requirements.
+            <para>The value for this setting should be a string in the format of
+            AppPackageName/.PluginClassName.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorLaunchBrowser">
+            <summary>
+            Setting key to specify whether scanning barcodes containing URLs will
+            open the web browser. Barcodes containing URLs will not cause a
+            <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event if this setting
+            is true. This setting is true by default on Honeywell Android computers.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorLaunchEZConfig">
+            <summary>
+            Setting key to specify whether scanning barcodes generated by EZ Config
+            for Mobility will launch EZ Config on the mobile computer to apply settings.
+            Aztec barcodes with "ecfg" near the beginning will not cause a
+            <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event if this setting is
+            true. This setting is true by default on Honeywell Android computers.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorPrefix">
+            <summary>
+            Setting key to specify the data added to the beginning of the barcode data.
+            This is often referred to as the preamble.
+            <para>The value for this setting should be a string.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorScanToIntent">
+            <summary>
+            Setting key to specify whether barcodes starting with "//" will attempt
+            to open an application. If the setting value is true, barcodes with the
+            format "//<i>NAME</i>" or "//<i>NAME</i>$<i>DATA</i>" will launch an
+            application listening for an intent with the action
+            "com.honeywell.scantointent.intent.action.<i>NAME</i>". Data if present
+            will be included as an extra. The extra key for the data is
+            "com.honeywell.scantointent.intent.extra.DATA".
+            <para>Barcodes starting with "//" will not cause a
+            <see cref="E:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.BarcodeDataReady"/> event if this setting is
+            true. This setting is true by default on Honeywell Android computers.</para>
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorSuffix">
+            <summary>
+            Setting key to specify the data added to the end of the barcode data.
+            This is often referred to as the postamble.
+            <para>The value for this setting should be a string.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorSymbologyPrefix">
+            <summary>
+            Setting key to specify the data added to the beginning of the barcode
+            data to indicate the symbology. This is added before the data, but
+            after the prefix specified in <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorPrefix"/>.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.DataProcessorSymbologyPrefix_AIM"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.DataProcessorSymbologyPrefix_Honeywell"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.DataProcessorSymbologyPrefix_None"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DecodeWindowBottom">
+            <summary>
+            Setting key to set the bottom edge of the scan window within the scanner's
+            overall image window. A value of 50 is the center of the image window, and 100 is the bottom.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DecodeWindowLeft">
+            <summary>
+            Setting key to set the left edge of the scan window within the scanner's
+            overall image window. A value of 0 is the left edge of the image window, and 50 is the center.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DecodeWindowRight">
+            <summary>
+            Setting key to set the right edge of the scan window within the scanner's
+            overall image window. A value of 50 is the center of the image window, and 100 is the right edge.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DecodeWindowTop">
+            <summary>
+            Setting key to set the top edge of the scan window within the scanner's
+            overall image window. A value of 0 is the top of the image window, and 50 is the center.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DotCodeEnabled">
+            <summary>
+            Setting key to enable or disable the DotCode symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DotCodeMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding DotCode barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DotCodeMinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding DotCode barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean13AddendaRequiredEnabled">
+            <summary>
+            Setting key to enable or disable the requirement for EAN-13 add-on 2 or add-on 5 to be enabled.
+            If enabled, only codes with add-on enabled will be decoded.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean13AddendaSeparatorEnabled">
+            <summary>
+            Setting key to enable or disable adding a space separation between
+            the EAN-13 bar code data and the add-on characters in the decode result.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean13CheckDigitTransmitEnabled">
+            <summary>
+            Setting key to enable or disable EAN-13 check digit transmission.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean13Enabled">
+            <summary>
+            Setting key to enable or disable the EAN-13 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean13FiveCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable reading the 5 chars addendum
+            of EAN-13 barcodes. Failure to decode the full add-on will result
+            in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean13TwoCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable reading the 2 chars addendum
+            of EAN-13 barcode. Failure to decode the full add-on will result
+            in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean8AddendaRequiredEnabled">
+            <summary>
+            Setting key to enable or disable the requirement for EAN-8 add-on 2 or add-on 5 to be enabled.
+            If enabled, only codes with add-on enabled will be decoded.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean8AddendaSeparatorEnabled">
+            <summary>
+            Setting key to enable or disable adding a space separation between
+            the EAN-8 bar code data and the add-on characters in the decode result.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean8CheckDigitTransmitEnabled">
+            <summary>
+            Setting key to enable or disable EAN-8 check digit transmission.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean8Enabled">
+            <summary>
+            Setting key to enable or disable the EAN-8 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean8FiveCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable reading the 5 chars addendum
+            of EAN-8 barcodes. Failure to decode the full add-on will result
+            in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Ean8TwoCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable reading the 2 chars addendum
+            of EAN-8 barcodes. Failure to decode the full add-on will result
+            in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.EanUccEmulationMode">
+            <summary>
+            Setting key to set EANUCC emulation mode.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1128Emulation"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1CodeExpansionOff"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1DatabarEmulation"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1Ean8toEan13Conversion"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1EmulationOff"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.GridMatrixEnabled">
+            <summary>
+            Setting key to enable or disable the Grid Matrix symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.GridMatrixMaximumLength">
+            <summary>
+            Setting key to set the maximum length for decoding Grid Matrix barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.GridMatrixMinimumLength">
+            <summary>
+            Setting key to set the minimum length for decoding Grid Matrix barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Gs1128Enabled">
+            <summary>
+            Setting key to enable or disable the GS1-128 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Gs1128MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding GS1-128 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Gs1128MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding GS1-128 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.HanXinEnabled">
+            <summary>
+            Setting key to enable or disable the Han Xin symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.HanXinMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Han Xin barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.HanXinMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Han Xin barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Iata25Enabled">
+            <summary>
+            Setting key to enable or disable the International Air
+            Transportation Association (IATA) 2 of 5 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Iata25MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding IATA 2 of 5 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Iata25MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding IATA 2 of 5 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25CheckDigitMode">
+            <summary>
+            Setting key to set the check digit mode for Interleaved 2 of 5 barcodes.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Interleaved25CheckDigitMode_Check"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Interleaved25CheckDigitMode_CheckAndStrip"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Interleaved25CheckDigitMode_NoCheck"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25Enabled">
+            <summary>
+            Setting key to enable or disable the Interleaved 2 of 5 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Interleaved 2 of 5 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Interleaved 2 of 5 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Isbt128Enabled">
+            <summary>
+            Setting key to enable or disable the ISBT 128 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.KoreanPostEnabled">
+            <summary>
+            Setting key to enable or disable the Korean Post symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.KoreanPostMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Korean Post barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.KoreanPostMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Korean Post barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.LinearDamageImprovements">
+            <summary>
+            Setting key for enabling this function when scanning damaged or badly printed 1-D bar codes.
+            This setting enhances the ability to read these types of bar codes.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Matrix25Enabled">
+            <summary>
+            Setting key to enable or disable the Matrix 2 of 5 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Matrix25MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Matrix 2 of 5 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Matrix25MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Matrix 2 of 5 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MaxicodeEnabled">
+            <summary>
+            Setting key to enable or disable the Maxicode symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MaxicodeMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Maxicode barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MaxicodeMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Maxicode barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MicroPdf417Enabled">
+            <summary>
+            Setting key to enable or disable the Micro PDF417 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MicroPdf417MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Micro PDF417 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MicroPdf417MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Micro PDF417 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode">
+            <summary>
+            Setting key to set the check digit mode for MSI barcodes.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_DoubleMod10Check"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_DoubleMod10CheckAndStrip"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_NoCheck"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod10Check"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod10CheckAndStrip"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod11PlusMod10Check"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod11PlusMod10CheckAndStrip"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiEnabled">
+            <summary>
+            Setting key to enable or disable the MSI symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding MSI barcodes.
+            Barcodes that don't meet the maximum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding MSI barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiOutOfSpecSymbol">
+            <summary>
+            Setting key to enable or disable out of spec MSI codes.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiShortMargin">
+            <summary>
+            Setting key to enable or disable reading MSI with short margin
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.NotificationBadReadEnabled">
+            <summary>
+            Setting key to enable or disable the bad read notifications. This setting
+            determines whether the bad read beep will play when no bar code is decoded.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.NotificationGoodReadEnabled">
+            <summary>
+            Setting key to enable or disable good read notifications. This setting
+            determines whether the good read beep will play on successful decode.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.NotificationVibrateEnabled">
+            <summary>
+            Setting key to enable or disable vibration during notifications.
+            This setting determines whether the device will vibrate when a
+            notification occurs. Note that this setting is ignored if the
+            device's ringer mode is set to SILENT.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Pdf417Enabled">
+            <summary>
+            Setting key to enable or disable the PDF417 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Pdf417MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding PDF417 barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Pdf417MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding PDF417 barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode">
+            <summary>
+            Setting key to enable one or more 2D postal symbologies. Enabling one
+            grouping option means disabling the previously selected grouping.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Australia"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Bpo"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Canada"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Dutch"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_InfoMail"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_InfoMailAndBpo"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Japan"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_None"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Planet"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnet"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpu"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpuAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpuAndUspsPlusBnb"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpuPlusBnB"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUspsPlusBnB"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetPlusBnb"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndUpu"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndUpuAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Postnet"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpu"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpuAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpuAndUspsPlusBnb"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpuPlusBnb"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUspsPlusBnb"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetPlusBnb"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Upu"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_UpuAndUsps"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Usps"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.PlanetCheckDigitTransmitEnabled">
+            <summary>
+            Setting key to enable or disable the check digit transmission for PLANET barcodes.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.PostnetCheckDigitTransmitEnabled">
+            <summary>
+            Setting key to enable or disable the check digit transmission for POSTNET barcodes.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.QrCodeEnabled">
+            <summary>
+            Setting key to enable or disable the QR Code symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.QrCodeMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding QR Code barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.QrCodeMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding QR Code barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.RssEnabled">
+            <summary>
+            Setting key to enable or disable the GS1 DataBar Omnidirectional symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.RssExpandedEnabled">
+            <summary>
+            Setting key to enable or disable the GS1 DataBar Expanded symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.RssExpandedMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding GS1 DataBar Expanded
+            barcodes. Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.RssExpandedMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding GS1 DataBar Expanded
+            barcodes. Barcodes that don't meet the minimum length requirement
+            will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.RssLimitedEnabled">
+            <summary>
+            Setting key to enable or disable the GS1 DataBar Limited symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Standard25Enabled">
+            <summary>
+            Setting key to enable or disable the Standard 2 of 5 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Standard25MaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Standard 2 of 5
+            barcodes. Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Standard25MinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Standard 2 of 5
+            barcodes. Barcodes that don't meet the minimum length requirement
+            will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TelepenEnabled">
+            <summary>
+            Setting key to enable or disable the Telepen symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TelepenMaximumLength">
+            <summary>
+            Setting key to set maximum code length for decoding Telepen barcodes.
+            Barcodes exceeding the maximum length will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TelepenMinimumLength">
+            <summary>
+            Setting key to set minimum code length for decoding Telepen barcodes.
+            Barcodes that don't meet the minimum length requirement will not be decoded.
+            <para>The value for this setting should be an integer.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TelepenOldStyleEnabled">
+            <summary>
+            Setting key to enable or disable old-style Telepen.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Tlc39Enabled">
+            <summary>
+            Setting key to enable or disable the TLC 39 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanDelay">
+            <summary>
+            Setting key to set the delay before starting to scan after the aimer is turned on.
+            <para>The value for this setting should be an integer (in milliseconds).</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode">
+            <summary>
+            Setting key to set the trigger scan mode.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_Continuous"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_OneShot"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_ReadOnRelease"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_ReadOnSecondTriggerPress"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanSameSymbolTimeout">
+            <summary>
+            Setting key to set the time period before the scanner can reread the same
+            barcode in continuous trigger scan mode.
+            <para>The value for this setting should be an integer (in milliseconds).</para>
+            <seealso cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode"/>
+            <seealso cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_Continuous"/>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanSameSymbolTimeoutEnabled">
+            <summary>
+            Setting key to enable or disable same symbol timeout. If the setting
+            value is true, you may specify the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanSameSymbolTimeout"/> to
+            allow the scanner to reread the same barcode in continuous trigger scan mode.
+            <para>The value for this setting should be boolean.</para>
+            <seealso cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode"/>
+            <seealso cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_Continuous"/>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerTimeout">
+            <summary>
+            Setting key to set the trigger timeout. The behavior depends on the scanner.
+            For Honeywell internal scanners, this setting indicates how long the scanner
+            will remain on while the scan trigger is pressed. Once this timeout has
+            expired, the scanner will be automatically turned off to save power.
+            <para>The value for this setting should be an integer (in seconds).</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriopticEnabled">
+            <summary>
+            Setting key to enable or disable the Trioptic symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcAAddendaRequiredEnabled">
+            <summary>
+            Setting key to enable or disable the requirement for UPCA add-on 2 or
+            add-on 5 to be enabled. If enabled, only codes with add-on enabled will be decoded.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcAAddendaSeparatorEnabled">
+            <summary>
+            Setting key to enable or disable adding a space separation between
+            the UPCA bar code data and the add-on characters in the decode result.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcACheckDigitTransmitEnabled">
+            <summary>
+            Setting key to enable or disable the check digit transmission for UPCA barcodes.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcACombineCouponCodeModeEnabled">
+            <summary>
+            Setting key to enable or disable UPC-A Coupon Extended Code. If enabled,
+            the primary UPC-A coupon code with a supplemental barcode can be decoded
+            and the data are combined.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcACouponCodeModeEnabled">
+            <summary>
+            Setting key to enable or disable UPC-A Coupon Code.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcAEnable">
+            <summary>
+            Setting key to enable or disable the UPC-A symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcAFiveCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable UPC-A add-on 5. Failure to decode
+            the full add-on will result in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcANumberSystemTransmitEnabled">
+            <summary>
+            Setting key to enable or disable UPC-A number system transmission.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcATranslateEan13">
+            <summary>
+            Setting key to translate UPC-A to EAN13.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcATwoCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable UPC-A add-on 2. Failure to decode
+            the full add-on will result in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcEAddendaRequiredEnabled">
+            <summary>
+            Setting key to enable or disable the requirement for UPC-E add-on 2 or
+            add-on 5 to be enabled. If enabled, only codes with add-on enabled will be decoded.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcEAddendaSeparatorEnabled">
+            <summary>
+            Setting key to enable or disable adding a space separation between the
+            UPC-E barcode data and the add-on characters in the decode result.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcECheckDigitTransmitEnabled">
+            <summary>
+            Setting key to enable or disable the check digit transmission for UPC-E barcodes.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcE1Enabled">
+            <summary>
+            Setting key to enable or disable the UPC-E1 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcEEnabled">
+            <summary>
+            Setting key to enable or disable the UPC-E0 symbology.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcEExpandToUpcA">
+            <summary>
+            Setting key to enable or disable expanding a UPC-E barcode into a UPC-A standard code.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcEFiveCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable UPC-E add-on 5. Failure to decode
+            the full add-on will result in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcENumberSystemTransmitEnabled">
+            <summary>
+            Setting key to enable or disable UPC-E number system transmission.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.UpcETwoCharAddendaEnabled">
+            <summary>
+            Setting key to enable or disable UPC-E add-on 2. Failure to decode
+            the full add-on will result in an overall decode failure.
+            <para>The value for this setting should be boolean.</para>
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.VideoReverseEnabled">
+            <summary>
+            Setting key to specify whether normal or inverse decoding for linear symbologies
+            is enabled during the execution of decode. By default normal video is enabled.
+            <para>The value for this setting should be one of the values below.
+            Use the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the
+            <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> instance to reference these predefined values.</para>
+            <list type="bullet">
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.VideoReverseEnabled_Inverse"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.VideoReverseEnabled_Normal"/></item>
+            <item><see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.VideoReverseEnabled_NormalAndInverse"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues">
+            <summary>
+            This class provides properties to get the predefined values for certain barcode
+            related settings. The property name has a prefix of the associated setting key
+            defined in the <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys"/> class. Application should
+            create an instance of the <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/> object and use the
+            <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.SettingValues"/> property of the <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/>
+            instance to reference the properties defined in this class.
+            </summary>
+            <seealso cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys"/>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.CodabarCheckDigitMode_Check">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarCheckDigitMode"/>
+            to specify that checksum check is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.CodabarCheckDigitMode_CheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarCheckDigitMode"/>
+            to specify that checksum check is performed and the checksum digit
+            is stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.CodabarCheckDigitMode_NoCheck">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.CodabarCheckDigitMode"/>
+            to specify that no checksum checking is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_DoubleDigitCheck">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11CheckDigitMode"/>
+            to specify two checksum digits checked.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_DoubleDigitCheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11CheckDigitMode"/>
+            to specify two checksum digits checked and stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_SingleDigitCheck">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11CheckDigitMode"/>
+            to specify one checksum digit checked.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code11CheckDigitMode_SingleDigitCheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code11CheckDigitMode"/>
+            to specify one checksum digit checked and stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code128ShortMargin_Disabled">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128ShortMargin"/>
+            to specify decoding for short margin barcodes is disabled.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code128ShortMargin_EnableBothEnds">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128ShortMargin"/>
+            to specify decoding for short margin barcodes is enabled for both ends.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code128ShortMargin_Enabled">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code128ShortMargin"/>
+            to specify decoding for short margin barcodes is enabled for short margin
+            at only one end but not both.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code39CheckDigitMode_Check">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39CheckDigitMode"/>
+            to specify that checksum check is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code39CheckDigitMode_CheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39CheckDigitMode"/>
+            to specify that Checksum check is performed and the checksum
+            digit is stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Code39CheckDigitMode_NoCheck">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Code39CheckDigitMode"/>
+            to specify that no checksum checking is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.DataProcessorSymbologyPrefix_AIM">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorSymbologyPrefix"/>
+            to specify the AIM symbology identifier will be added before the barcode data.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.DataProcessorSymbologyPrefix_Honeywell">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorSymbologyPrefix"/>
+            to specify the Honeywell proprietary symbology identifier will be added before the barcode data.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.DataProcessorSymbologyPrefix_None">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.DataProcessorSymbologyPrefix"/>
+            to specify no symbology identifier will be added before the barcode data.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1128Emulation">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.EanUccEmulationMode"/>
+            to specify GS1-128 emulation.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1CodeExpansionOff">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.EanUccEmulationMode"/>
+            to specify GS1 code expansion off.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1DatabarEmulation">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.EanUccEmulationMode"/>
+            to specify GS1 DataBar emulation.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1Ean8toEan13Conversion">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.EanUccEmulationMode"/>
+            to specify Ean8 to Ean13 conversion.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.EanUccEmulationMode_Gs1EmulationOff">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.EanUccEmulationMode"/>
+            to specify GS1 emulation off.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Interleaved25CheckDigitMode_Check">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25CheckDigitMode"/>
+            to specify checksum check is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Interleaved25CheckDigitMode_CheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25CheckDigitMode"/>
+            to specify checksum check is performed and the checksum digit is stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Interleaved25CheckDigitMode_NoCheck">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Interleaved25CheckDigitMode"/>
+            to specify no checksum checking is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_NoCheck">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify no checksum checking is performed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod10CheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify mode 10 checksum check is performed and the checksum digit is stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod10Check">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify one mod 10 checksum digit checked.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod11PlusMod10Check">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify one mod 11 checksum digit plus one mod 10 checksum digit checked.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_DoubleMod10Check">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify two mod 10 checksum digits checked.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_SingleMod11PlusMod10CheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify one mod 11 checksum digit plus one mod 10 checksum digit checked and stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.MsiCheckDigitMode_DoubleMod10CheckAndStrip">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.MsiCheckDigitMode"/>
+            to specify two mod 10 checksum digits checked and stripped from the result string.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_None">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to specify no 2D postal symbologies enabled.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Australia">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the Australia Post symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_InfoMail">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the Infomail symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Japan">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the Japan Post symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Canada">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the Canadian Postal Service symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Dutch">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the Dutch Post symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Planet">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the United States Postal Service PLANET symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Postnet">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the United States Postal Numeric Encoding Technique (POSTNET) symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Bpo">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the British Post symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_InfoMailAndBpo">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable Infomail and British Post symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Upu">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable UPU symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_Usps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable the United States Postal Service Intelligent Mail symbology.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetPlusBnb">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnet">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET and POSTNET symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndUpu">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET and UPU symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpu">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET and UPU symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_UpuAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable UPU and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetPlusBnb">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET and POSTNET with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpuPlusBnb">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET and UPU with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUspsPlusBnb">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET and USPS Intelligent Mail with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpu">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, POSTNET and UPU symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, POSTNET and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndUpuAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, UPU and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpuAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET, UPU and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpuPlusBnB">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, POSTNET and UPU with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUspsPlusBnB">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, POSTNET and USPS Intelligent Mail with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PostnetAndUpuAndUspsPlusBnb">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable POSTNET, UPU and USPS Intelligent Mail with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpuAndUsps">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, POSTNET, UPU, and USPS Intelligent Mail symbologies.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.Postal2DMode_PlanetAndPostnetAndUpuAndUspsPlusBnb">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.Postal2DMode"/>
+            to enable PLANET, POSTNET, UPU, and USPS Intelligent Mail with B and B fields.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_Continuous">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode"/> to
+            continuously decode barcodes when the scan trigger is pressed
+            until the trigger is released. By default it only decodes unique
+            barcodes (within the period of trigger pressing and releasing)
+            unless the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanSameSymbolTimeoutEnabled"/>
+            property value is true which allows the same barcode to be read
+            after the <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanSameSymbolTimeout"/>
+            period.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_OneShot">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode"/> to
+            scan only one barcode when the scan trigger is pressed.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_ReadOnRelease">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode"/> to
+            scan barcode when the trigger is released. Pressing the scan trigger will
+            start the aimer and releasing the trigger will scan the barcode.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.TriggerScanMode_ReadOnSecondTriggerPress">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.TriggerScanMode"/> to
+            scan barcode when the trigger is pressed the second time. Pressing
+            the scan trigger first time will start the aimer and pressing the
+            trigger second time will scan the barcode.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.VideoReverseEnabled_Normal">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.VideoReverseEnabled"/>
+            to specify decoding only normal video for 1D codes.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.VideoReverseEnabled_Inverse">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.VideoReverseEnabled"/>
+            to specify decoding only inverse video for 1D codes.
+            </summary>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingValues.VideoReverseEnabled_NormalAndInverse">
+            <summary>
+            Setting value for <see cref="P:Honeywell.AIDC.CrossPlatform.BarcodeReaderSettingKeys.VideoReverseEnabled"/>
+            to specify decoding both, normal and inverse video for 1D codes.
+            </summary>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies">
+            <summary>
+            Defines the symbology identifiers.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.AustraliaPost">
+            <summary>
+            Australia Post barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Aztec">
+            <summary>
+            Aztec barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.BritishPost">
+            <summary>
+            British Post barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.CanadaPost">
+            <summary>
+            Canadian Postal Service barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.ChinaPost">
+            <summary>
+            Chinese Postal Service symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Codabar">
+            <summary>
+            Codabar barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.CodablockA">
+            <summary>
+            Codablock A barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.CodablockF">
+            <summary>
+            Codablock F barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Code11">
+            <summary>
+            Code 11 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Code39">
+            <summary>
+            Code 39 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Code93">
+            <summary>
+            Code 93 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Code128">
+            <summary>
+            Code 128 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Gs1128">
+            <summary>
+            GS1-128 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Isbt128">
+            <summary>
+             International Society of Blood Transfusion (ISBT) 128 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.DataMatrix">
+            <summary>
+            Data Matrix barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Ean8">
+            <summary>
+            European Article Number (EAN) 8 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Ean13">
+            <summary>
+            European Article Number (EAN) 13 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.DutchPost">
+            <summary>
+            Dutch Post barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Gs1DataBarExpanded">
+            <summary>
+            GS1 DataBar Expanded barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Gs1DataBarLimited">
+            <summary>
+            GS1 DataBar Limited barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Gs1DataBarOmniDir">
+            <summary>
+            GS1 DataBar Omnidirectional barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.HanXin">
+            <summary>
+            Han Xin barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Infomail">
+            <summary>
+            Infomail barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.UsIntelligent">
+            <summary>
+            United States Postal Service Intelligent Mail barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Interleaved2Of5">
+            <summary>
+            Interleaved 2 of 5 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Matrix2Of5">
+            <summary>
+            Matrix 2 of 5 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Standard2Of5">
+            <summary>
+            Standard 2 of 5 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.JanpanPost">
+            <summary>
+            Java Post barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.KoreanPost">
+            <summary>
+            Korean Post barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Maxicode">
+            <summary>
+            Maxicode barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.MicroPdf417">
+            <summary>
+            Micro PDF417 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Msi">
+            <summary>
+            MSI barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.PDF417">
+            <summary>
+            PDF417 symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.UsPlanet">
+            <summary>
+            United States Postal Service PLANET barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.UsPostNet">
+            <summary>
+            United States Postal Numeric Encoding Technique (POSTNET) barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Qr">
+            <summary>
+            Quick Response (QR) Code barcode symbology
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.SwedenPost">
+            <summary>
+            Sweden Postal barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Telepen">
+            <summary>
+            Telepen barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Tlc39">
+            <summary>
+            TLC 39 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Trioptic39">
+            <summary>
+            Tri-Optic Media Storage Devices barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Upca">
+            <summary>
+            Universal Product Code (UPC) version A barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Upce">
+            <summary>
+            Universal Product Code (UPC) version E barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.UpcCoupon">
+            <summary>
+            Universal Product Code (UPC) Coupon with supplemental barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.Iata25">
+            <summary>
+            International Air Transportation Association (IATA) 2 of 5 barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.DotCode">
+            <summary>
+            DotCode barcode symbology.
+            </summary>
+        </member>
+        <member name="F:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.GridMatrix">
+            <summary>
+            Grid Matrix barcode symbology.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.BarcodeSymbologies.GetName(System.UInt32)">
+            <summary>
+            Returns a string name of the specified symbology type.
+            </summary>
+            <param name="symbType">A barcode symbology type defined in this class.</param>
+            <returns>A string name of the specified symbology type.</returns>
+        </member>
+        <member name="T:Honeywell.AIDC.CrossPlatform.IBarcodeReader">
+            <summary>
+            Provides common interface for a barcode reader. The <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReader"/>
+            class implements this interface.
+            </summary>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.IBarcodeReader.OpenAsync">
+            <summary>
+            Opens the barcode reader.
+            </summary>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.IBarcodeReader.CloseAsync">
+            <summary>
+            Closes the barcode reader.
+            </summary>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.IBarcodeReader.SetAsync(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Sets a collection of decoder or symbology settings.
+            </summary>
+            <param name="settings">A Dictionary object containing setting key-value pairs.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.IBarcodeReader.SoftwareTriggerAsync(System.Boolean)">
+            <summary>
+            Starts or stops the software trigger. When the on parameter is true, it
+            activates the aimer to start decoding barcodes.
+            Note: Some readers may not support the software trigger.
+            </summary>
+            <param name="on">A Boolean value to indicate whether to start or
+            stop the software trigger.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="M:Honeywell.AIDC.CrossPlatform.IBarcodeReader.EnableAsync(System.Boolean)">
+            <summary>
+            Enables or disables the barcode reader.
+            </summary>
+            <param name="enabled">A Boolean value to indicate whether to enable or
+            disable the barcode reader.</param>
+            <returns>A <see cref="T:Honeywell.AIDC.CrossPlatform.BarcodeReaderBase.Result"/> object containing the success or
+            failure result of the operation.</returns>
+        </member>
+        <member name="P:Honeywell.AIDC.CrossPlatform.IBarcodeReader.IsReaderOpened">
+            <summary>
+            Gets a boolean value indicating whether the barcode reader is opened.
+            </summary>
+        </member>
+    </members>
+</doc>

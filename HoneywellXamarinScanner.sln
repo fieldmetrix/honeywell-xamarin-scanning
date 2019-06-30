@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2048
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HoneywellXamarinScanner", "HoneywellXamarinScanner\HoneywellXamarinScanner.csproj", "{B62059E7-A760-49F4-BB18-B4277830B696}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B62059E7-A760-49F4-BB18-B4277830B696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62059E7-A760-49F4-BB18-B4277830B696}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62059E7-A760-49F4-BB18-B4277830B696}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B62059E7-A760-49F4-BB18-B4277830B696}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62059E7-A760-49F4-BB18-B4277830B696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B62059E7-A760-49F4-BB18-B4277830B696}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6D5212C-6AF9-4C92-9A73-514147974B73}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+	<LinearLayout
+		android:orientation="vertical"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/linearLayout3"
+		android:layout_marginTop="30dp">
+		<TextView
+			android:id="@+id/empty"
+			android:layout_weight="1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+		android:text="Screen 1"
+		android:layout_marginLeft="10dp"
+			android:layout_gravity="center_vertical"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_marginBottom="7dp"
+			android:layout_marginTop="20dip" />
+		<TextView
+			android:text=""
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/scanDataView"
+			android:lines="6"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:background="#ff808080"
+			android:textColor="#FF0"
+			android:textSize="20sp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingTop="0dp"
+			android:layout_marginBottom="0.0dp" />
+	</LinearLayout>
+	<LinearLayout
+		android:id="@+id/layout1"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:orientation="vertical"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="30dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp">
+		<Button
+			android:id="@+id/BtnScan"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Scan"
+			android:layout_marginTop="35dip"
+			android:layout_gravity="center" />
+		<Button
+			android:id="@+id/BtnClearScan"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="Clear Scan"
+			android:layout_marginTop="35dip"
+			android:layout_gravity="center" />
+	</LinearLayout>
+</LinearLayout>
