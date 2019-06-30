@@ -5,7 +5,7 @@ The Honeywell Xamarin samples code uses static event handlers.
 
 This works well enough for a single activity, however extending the sample code to work with multiple activities 
 rapidly resulted in issues for us. We experienced "double scans" when activities were opened and closed repeatedly. 
-The reason behind was the static event handlers that were not being unsubscribed in the sample code.
+The reason behind this was static event handlers that were not being unsubscribed in the sample code.
 
 In the Opening and Closing the Scanner section of the Honeywell Xamarin Scanning SDK documents they advise:
 "Because the scanner is shared among applications, it is a good practice to open the scanner only when it is needed
