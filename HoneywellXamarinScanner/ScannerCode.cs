@@ -40,9 +40,6 @@ namespace XamarinScanner
 		public static System.Collections.Generic.IList<string> ScanList = null;
 		public static string SelectedScannerName { get; set; }
 
-        public delegate void ScanResult(string strResult);
-        public static event ScanResult Scan_Result_Event = null;
-
         /// <summary>
         /// Writes all to the symbology setting keys to a dictionary
         /// </summary>

@@ -34,7 +34,6 @@ namespace XamarinScanner
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.activity_main);
 
-			//editBarcodeData = FindViewById<EditText>(Resource.Id.EditBarcodeData);
 			scanData = FindViewById<TextView>(Resource.Id.scanDataView);
 
 			btnClearScan = FindViewById<Button>(Resource.Id.BtnClearScan);
@@ -47,13 +46,6 @@ namespace XamarinScanner
 			btnSecondActivity.Click += BtnSecondActivity_Click;
 
 #if HONEYWELLSCANNER
-			//pass the context of this activity to the ScannCode class
-			//AppContext = this.context;
-
-			//// Register ScanCode events from static instance
-			//ScannerCode.Scan_Result_Event += new ScannerCode.ScanResult(On_Result_Event);
-			//ScannerCode.Update_Event += new ScannerCode.UpdateControls(On_Update_Event);
-
 			// this only needs to be done once per Application
 			// in this case the first activity is MainActivity
 			// populates a list of connected barcode reader names
@@ -76,9 +68,6 @@ namespace XamarinScanner
 			base.OnPause();
 
 #if HONEYWELLSCANNER
-			// Unregister ScanCode events from static instance
-			//ScannerCode.Scan_Result_Event -= On_Result_Event;
-			//ScannerCode.Update_Event -= On_Update_Event;
 			CloseBarcodeScanner();
 #endif
 
@@ -93,16 +82,6 @@ namespace XamarinScanner
 			base.OnResume();
 
 #if HONEYWELLSCANNER
-			//mOpenReader = true;
-
-			// Just in case - unregister ScanCode events from static instance
-			//ScannerCode.Scan_Result_Event -= On_Result_Event;
-			//ScannerCode.Update_Event -= On_Update_Event;
-
-			// Register ScanCode events from static instance
-			//ScannerCode.Scan_Result_Event += new ScannerCode.ScanResult(On_Result_Event);
-			//ScannerCode.Update_Event += new ScannerCode.UpdateControls(On_Update_Event);
-
 			OpenBarcodeReader();
 
 			//lock the orientationt to Portrait
@@ -129,7 +108,6 @@ namespace XamarinScanner
 		private async void BtnScan_Click(object sender, EventArgs e)
 		{
 #if HONEYWELLSCANNER
-			//ScannerCode.onScanButtonCLicked(scanData);
 			if (mSelectedReader != null && mSelectedReader.IsReaderOpened)
 			{
 				BarcodeReader.Result result = await mSelectedReader.SoftwareTriggerAsync(true);
@@ -145,7 +123,7 @@ namespace XamarinScanner
 					ScannerCode.DisplayAlert("Error", "Failed to turn on software trigger, Code:" + result.Code +
 						" Message:" + result.Message, Application.Context);
 				}
-			} //endif (mReaderOpened)
+			}
 #endif
 		}
 
@@ -207,48 +185,6 @@ namespace XamarinScanner
 
 			ScannerCode.CloseBarcodeScanner(mSelectedReader, mSoftOneShotScanStarted);
 
-		}
-
-		/// <summary>
-		/// Allows Updates to the UI controls from the ScanCode class
-		/// </summary>
-		/// <param name="bscanButton"></param>
-		/// <param name="bscanSpinner"></param>
-		/// <param name="strViewText"></param>
-		//public void On_Update_Event(bool bScannerOpen)
-		//{
-		//	this.RunOnUiThread(() =>
-		//	{
-		//		bHoneywellScannerOpen = bScannerOpen;
-		//		btnScan.Enabled = bHoneywellScannerOpen;
-		//		//selectScanner.Enabled = bscanSpinner;
-		//		//symConfig.Enabled = syConfig;
-		//		//openScanner.Checked = bOpenbtn;
-
-		//		ScannerCode.mOpenReader = bScannerOpen;
-		//		if (ScannerCode.mOpenReader)
-		//		{
-		//			ScannerCode.OpenBarcodeReader();
-		//		}
-		//		else
-		//		{
-		//			ScannerCode.CloseBarcodeScanner();
-		//		}
-
-		//	});
-		//}
-
-		/// <summary>
-		/// Allows you to pass the scanned data form the ScannerCode.cs to the TextView on this Activity
-		/// </summary>
-		/// <param name="Result"></param>
-		public void On_Result_Event(string Result)//Changed Scan Result event from static instance
-		{
-			this.RunOnUiThread(() =>
-			{//Changed Invoke UI Thread
-				if (!string.IsNullOrEmpty(Result))
-					UpdateDetailItemWithScannedValue(Result);
-			});
 		}
 
 		#endregion
